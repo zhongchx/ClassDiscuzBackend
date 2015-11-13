@@ -16,6 +16,7 @@ CREATE TABLE user (
     email varchar(64) NOT NULL,
     password varchar(32) NOT NULL,
     name varchar(64) NOT NULL,
+    avatar MEDIUMBLOB,
     college varchar(128),
     major varchar(128),
     focus INT NOT NULL,

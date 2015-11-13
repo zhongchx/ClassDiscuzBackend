@@ -1,10 +1,13 @@
 package util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -70,7 +73,9 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 			if (rs.next()) {
 				user.setId(rs.getInt("id"));
 				user.setName(rs.getString("name"));
-				user.setAvatar(rs.getBytes("avatar"));
+				Blob img = rs.getBlob("avatar");
+				user.setAvatar(img.getBytes(1, (int)img.length()));
+				img.free();
 				user.setCollege(rs.getString("college"));
 				user.setMajor(rs.getString("major"));
 				user.setFocus(rs.getInt("focus"));
@@ -95,6 +100,8 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 		
 		return user;
 	}
+	
+//	public User getUserById
 	
 	public List<Integer> getUserCourseId(int id) {
 		List<Integer> result = new ArrayList<Integer>();
@@ -166,15 +173,27 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 		return courseList;
 	}
 
-	public void editUser(int studentId, String name, String college, String major) {
+	public void editUser(int studentId, String name, byte[] avatar, String college, String major) {
 		try{
-			String sql = String.format(prop.getProperty("UPDATE_USER"),name,college,major,studentId);
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(sql);
+			
+			String sql = prop.getProperty("UPDATE_USER");
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+            stmt.setString(1, name);
+            stmt.setBinaryStream(2, new ByteArrayInputStream(avatar), avatar.length);
+            stmt.setString(3, college);
+            stmt.setString(4, major);
+            stmt.setInt(5, studentId);       
+
+            stmt.executeUpdate();
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void getUserInSameCourse(int studentId) {
+		
 	}
 
 }
