@@ -2,14 +2,15 @@ INSERT INTO user(email,password,name,college,major,focus) VALUES('zhongchx@andre
 INSERT INTO user(email,password,name,college,major,focus) VALUES('','','Andrew','CIT','ECE','0');
 INSERT INTO user(email,password,name,college,major,focus) VALUES('','','Penny','CIT','ECE','0');
 
-INSERT INTO course(num,name,time) VALUES('18641','JAVA','TR 12:30-13:30');
-INSERT INTO course(num,name,time) VALUES('18746','Storage System','TR 16:30-17:50');
-INSERT INTO course(num,name,time) VALUES('18655','Service Oriented Computing','1234');
-INSERT INTO course(num,name,time) VALUES('18601','Inovation and blah blah','4321');
+INSERT INTO course(num,instructor,name,time) VALUES('18641','BOB','JAVA','TR 12:30-13:30');
+INSERT INTO course(num,instructor,name,time) VALUES('18746','Storage System','TR 16:30-17:50');
+INSERT INTO course(num,instructor,name,time) VALUES('18655','Service Oriented Computing','1234');
+INSERT INTO course(num,instructor,name,time) VALUES('18601','Inovation and blah blah','4321');
 
 INSERT INTO registration(c_id,s_id) VALUES('1','1');
 INSERT INTO registration(c_id,s_id) VALUES('2','1');
 
+DELETE FROM registration WHERE c_id='1' AND s_id='1';
 
 CREATE TABLE user (
     id INT NOT NULL AUTO_INCREMENT,
