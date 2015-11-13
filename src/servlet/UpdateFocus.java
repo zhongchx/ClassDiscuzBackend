@@ -7,20 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
+import com.google.gson.Gson;
+
 import util.ClassDiscuzDB;
 
 /**
- * Servlet implementation class RegCourse
+ * Servlet implementation class UpdateFocus
  */
-@WebServlet("/reg")
-public class RegCourse extends HttpServlet {
+@WebServlet("/updatefocus")
+public class UpdateFocus extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegCourse() {
+    public UpdateFocus() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,13 +30,13 @@ public class RegCourse extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int courseId = Integer.parseInt(request.getParameter("courseId"));
-        int studentId = Integer.parseInt(request.getParameter("studentId"));
-        
+		int studentId = Integer.parseInt(request.getParameter("studentId"));
+		int focus = Integer.parseInt(request.getParameter("focus"));
+		
         ClassDiscuzDB db = new ClassDiscuzDB();
         db.connectDB();
-        db.regCourse(courseId,studentId);
-        db.closeDB();
+		db.updateFocus(studentId, focus);
+		db.closeDB();
 	}
 
 	/**

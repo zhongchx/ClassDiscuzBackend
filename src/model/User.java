@@ -12,7 +12,6 @@ public class User {
 	private String college;
 	private String major;
 	private int focus;
-	private List<Course> courses;
 	
 	public int getId() {
 		return id;
@@ -61,11 +60,5 @@ public class User {
 	}
 	public void setFocus(int focus) {
 		this.focus = focus;
-	}
-	public List<Course> getCourses() {
-		return courses;
-	}
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
 	}
 }

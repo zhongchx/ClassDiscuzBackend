@@ -1,12 +1,11 @@
 package model;
 
-import java.util.List;
-
 public class Course {
-	public int id;
-	public String num;
-	public String name;
-	public String time;
+	private int id;
+	private String num;
+	private String instructor;
+	private String name;
+	private String time;
 	
 	public int getId() {
 		return id;
@@ -20,7 +19,12 @@ public class Course {
 	public void setNum(String num) {
 		this.num = num;
 	}
-	
+	public String getInstructor() {
+		return instructor;
+	}
+	public void setInstructor(String instructor) {
+		this.instructor = instructor;
+	}
 	public String getName() {
 		return name;
 	}

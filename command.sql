@@ -26,6 +26,7 @@ CREATE TABLE user (
 CREATE TABLE course (
     id INT NOT NULL AUTO_INCREMENT,
     num varchar(64) NOT NULL,
+    instructor varchar(64) NOT NULL,
     name varchar(128) NOT NULL,
     time varchar(128) NOT NULL,
     PRIMARY KEY (id)
