@@ -9,23 +9,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import model.User;
 import util.ClassDiscuzDB;
 
 /**
- * Servlet implementation class EditProfile
+ * Servlet implementation class OtherProfile
  */
-@WebServlet("/editprofile")
-public class EditProfile extends HttpServlet {
+@WebServlet("/id")
+public class GetUserById extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditProfile() {
+    public GetUserById() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,12 +35,8 @@ public class EditProfile extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int studentId = Integer.parseInt(request.getParameter("studentId"));
-        String name = request.getParameter("name");
-        String college = request.getParameter("college");
-        String major = request.getParameter("major");
-        String imageStr = request.getParameter("avatar");
-//		byte[] image = Base64.decodeBase64(imageStr);
+		int studentId = Integer.parseInt(request.getParameter("studentId"));
+		Gson gson = new Gson();
         ClassDiscuzDB db = new ClassDiscuzDB(this.getServletContext());
         String json = null;
         JsonObject jsonObject = new JsonObject();
@@ -48,11 +45,13 @@ public class EditProfile extends HttpServlet {
 	        	jsonObject.addProperty("result", "1");
 	        	json = jsonObject.toString();
 	        } else {
-	        	db.editUser(studentId,name,imageStr.getBytes(),college,major);
-	        	jsonObject.addProperty("result", "0");
-	        	json = jsonObject.toString();
+        
+		        User user = db.getUserById(studentId);
+	            JsonElement jsonElement = gson.toJsonTree(user);
+	            jsonElement.getAsJsonObject().addProperty("result", "0");
+	           	json = gson.toJson(jsonElement);
 	        }
-        } catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
         	jsonObject.addProperty("result", "2");
         	json = jsonObject.toString();

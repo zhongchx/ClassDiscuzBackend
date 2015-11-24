@@ -1,6 +1,9 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,21 +11,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import model.Course;
 import model.User;
 import util.ClassDiscuzDB;
 
 /**
- * Servlet implementation class OtherProfile
+ * Servlet implementation class RegisteredCourses
  */
-@WebServlet("/otherprofile")
-public class OtherProfile extends HttpServlet {
+@WebServlet("/registered")
+public class RegisteredCourses extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OtherProfile() {
+    public RegisteredCourses() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,14 +39,22 @@ public class OtherProfile extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int studentId = Integer.parseInt(request.getParameter("studentId"));
 		Gson gson = new Gson();
-        ClassDiscuzDB db = new ClassDiscuzDB();
-        db.connectDB();
-        
-        User user = db.getUserById(studentId);
-        user.setEmail("");
-        user.setPassword("");
-        String json = gson.toJson(user);
-        
+        ClassDiscuzDB db = new ClassDiscuzDB(this.getServletContext());
+        String json = null;
+        JsonObject jsonObject = new JsonObject();
+        try{
+	        if (!db.connectDB()) {
+	        	jsonObject.addProperty("result", "1");
+	        	json = jsonObject.toString();
+	        } else {
+		        List<Course> result = db.getCourseByStuId(studentId);
+		        json = gson.toJson(result);
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+        	jsonObject.addProperty("result", "2");
+        	json = jsonObject.toString();
+		}
         db.closeDB();
 		response.getWriter().append(json);
 	}
