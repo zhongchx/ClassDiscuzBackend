@@ -33,8 +33,8 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 		}
 	}
 	
-	public void createUser(User newUser) throws SQLException {
-		String sql = String.format(prop.getProperty("ADD_USER"),newUser.getEmail(),newUser.getPassword(),newUser.getName(),newUser.getFocus());
+	public void createUser(User newUser, int chatId) throws SQLException {
+		String sql = String.format(prop.getProperty("ADD_USER"),newUser.getEmail(),newUser.getPassword(),newUser.getName(),newUser.getFocus(),chatId);
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate(sql);
 		stmt.close();
@@ -70,6 +70,7 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 			user.setFocus(rs.getInt("focus"));
 			user.setEmail(rs.getString("email"));
 			user.setPassword(rs.getString("password"));
+			user.setChatId(rs.getInt("chat_id"));
 		} else {
 			rs.close();
 			stmt.close();
@@ -103,6 +104,7 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 			user.setFocus(rs.getInt("focus"));
 			user.setEmail(rs.getString("email"));
 			user.setPassword(rs.getString("password"));
+			user.setChatId(rs.getInt("chat_id"));
 		}
 		rs.close();
 		stmt.close();
@@ -136,7 +138,8 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 			result.setNum(rs.getString("num"));
 			result.setTime(rs.getString("time"));
 			result.setLocation(rs.getString("location"));
-		} else  {
+			result.setDialogId(rs.getString("dialog"));
+		} else {
 			rs.close();
 			stmt.close();
 			return null;
@@ -187,6 +190,7 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 			course.setNum(rs.getString("num"));
 			course.setTime(rs.getString("time"));
 			course.setLocation(rs.getString("location"));
+			course.setDialogId(rs.getString("dialog"));
 			courseList.add(course);
 		}
 		rs.close();
@@ -242,5 +246,19 @@ public class ClassDiscuzDB extends AbstractDBConnector{
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate(sql);
 		stmt.close();
+	}
+	
+	public void updateDialog(int courseId, String dialogId) throws SQLException {
+		String sql = String.format(prop.getProperty("UPDATE_DIALOG"),dialogId,courseId);
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		stmt.close();		
+	}
+	
+	public void updateChatId(int studentId, int chatId) throws SQLException {
+		String sql = String.format(prop.getProperty("UPDATE_CHAT_ID"),chatId,studentId);
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(sql);
+		stmt.close();		
 	}
 }

@@ -7,7 +7,14 @@ public class Course {
 	private String name;
 	private String time;
 	private String location;
+	private String dialogId;
 	
+	public String getDialogId() {
+		return dialogId;
+	}
+	public void setDialogId(String dialogId) {
+		this.dialogId = dialogId;
+	}
 	public String getLocation() {
 		return location;
 	}

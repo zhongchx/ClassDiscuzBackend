@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 
 import model.User;
 import util.ClassDiscuzDB;
+import util.QBHelper;
 
 /**
  * Servlet implementation class SignUp
@@ -56,14 +57,20 @@ public class SignUp extends HttpServlet {
 		        	json = jsonObject.toString();
 		        } else {
 			        if (db.isValidEmail(email)) {
-			        	
-							db.createUser(newUser);
-	
-			            User user = db.getUserByEmailPwd(email, password);
-			            
-			            JsonElement jsonElement = gson.toJsonTree(user);
-			            jsonElement.getAsJsonObject().addProperty("result", "0");
-			           	json = gson.toJson(jsonElement);
+			        	int chatId = QBHelper.signUp(email,password, name);
+			        	if (chatId == 0) {
+				        	jsonObject.addProperty("result", "4");
+				        	json = jsonObject.toString();			        		
+			        	} else {
+							db.createUser(newUser, chatId);
+							
+				            User user = db.getUserByEmailPwd(email, password);
+				            
+				            JsonElement jsonElement = gson.toJsonTree(user);
+				            jsonElement.getAsJsonObject().addProperty("result", "0");
+				           	json = gson.toJson(jsonElement);			        		
+			        	}
+
 			        } else {
 			        	jsonObject.addProperty("result", "3");
 			        	json = jsonObject.toString();

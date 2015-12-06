@@ -12,6 +12,14 @@ public class User {
 	private String college;
 	private String major;
 	private int focus;
+	private int chatId;
+	
+	public int getChatId() {
+		return chatId;
+	}
+	public void setChatId(int chatId) {
+		this.chatId = chatId;
+	}
 	
 	public int getId() {
 		return id;

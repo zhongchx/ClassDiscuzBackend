@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonObject;
 
+import model.Course;
+import model.User;
 import util.ClassDiscuzDB;
+import util.QBHelper;
 
 /**
  * Servlet implementation class RegCourse
@@ -52,12 +55,26 @@ public class RegOrDropCourse extends HttpServlet {
 	        	jsonObject.addProperty("result", "1");
 	        	json = jsonObject.toString();
 	        } else {
-				if (db.isReg(courseId, studentId))
+	        	Course course = db.getCourseById(courseId);
+	        	User user = db.getUserById(studentId);
+				if (db.isReg(courseId, studentId)) {
 					db.dropCourse(courseId,studentId);
-				else
+					jsonObject.addProperty("result", "01");
+					QBHelper.removeDialogMember(course.getDialogId(),user.getChatId());
+				} else {
 					db.regCourse(courseId,studentId);
-	        	
-	        	jsonObject.addProperty("result", "0");
+					jsonObject.addProperty("result", "00");
+					System.out.println("Reg course: course id_"+courseId+"\tstudent id_"+studentId+" \t dialog id_"+course.getDialogId());
+					if (course.getDialogId().isEmpty() || course.getDialogId() == null || course.getDialogId().equals("null")) {
+						String dialogId = QBHelper.createDialog(course.getName(),user.getChatId());
+						course.setDialogId(dialogId);
+						
+						if (dialogId != null)
+							db.updateDialog(courseId, dialogId);
+					} else {
+						QBHelper.addDialogMember(course.getDialogId(),user.getChatId());
+					}
+				}
 	        	json = jsonObject.toString();
 	        }
 		} catch (SQLException e) {

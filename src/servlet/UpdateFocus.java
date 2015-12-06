@@ -36,8 +36,10 @@ public class UpdateFocus extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		int studentId = Integer.parseInt(request.getParameter("studentId"));
 		int focus = Integer.parseInt(request.getParameter("focus"));
+		System.out.println("Update focus!:"+studentId+"\t"+focus);
 		
         ClassDiscuzDB db = new ClassDiscuzDB(this.getServletContext());
 		
